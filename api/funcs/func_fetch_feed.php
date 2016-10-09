@@ -17,7 +17,7 @@
       $conn = null;
       return json_encode(array("success" => false, "reason" => "No feed with ID $feed_id"));
     }
-    $sqlFeed = "SELECT i.title as title, i.link as link, i.description as description, pubDate, guid FROM feed_items i LEFT JOIN feeds f ON i.feed = f.id WHERE f.id = $feed_id ORDER BY i.id DESC";
+    $sqlFeed = "SELECT i.title as title, i.link as link, i.description as description, pubDate, guid FROM feed_items i LEFT JOIN feeds f ON i.feed = f.id WHERE f.id = $feed_id ORDER BY i.pubDate DESC";
     if(isset($ITEM_LIMIT) && $ITEM_LIMIT > 0){
       $sqlFeed .= " LIMIT $ITEM_LIMIT";
     }

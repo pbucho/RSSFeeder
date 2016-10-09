@@ -19,7 +19,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>RSS Publisher</title>
+    <title>RSS Feeder</title>
     <link rel="stylesheet" href="css/style-login.css">
   </head>
   <body>

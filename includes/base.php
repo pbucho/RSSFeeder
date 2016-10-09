@@ -1,8 +1,6 @@
 <?php
   include_once("conf.php");
 
-  $ITEM_LIMIT = null;
-
   function base_get_connection(){
     global $server, $database, $username, $password;
 
