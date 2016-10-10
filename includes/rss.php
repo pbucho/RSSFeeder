@@ -29,7 +29,7 @@
     echo "$TAB2<title>".$feed_contents['title']."</title>$NL";
     echo "$TAB2<link>".$feed_contents['link']."</link>$NL";
     echo "$TAB2<description>".$feed_contents['description']."</description>$NL";
-    echo "$TAB2<atom:link href=\"".$feed_contents['link']."\" rel=\"self\" type=\"application/rss+xml\" />";
+    echo "$TAB2<atom:link href=\"".(is_null($feed_contents['href']) ? $feed_contents['link'] : $feed_contents['href'])."\" rel=\"self\" type=\"application/rss+xml\" />$NL";
     foreach($feed_contents['items'] as $item){
       echo "$TAB2<item>$NL";
       echo "$TAB3<title>".$item['title']."</title>$NL";

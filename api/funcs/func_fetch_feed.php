@@ -22,12 +22,12 @@
       $sqlFeed .= " LIMIT $ITEM_LIMIT";
     }
     $items = $conn->query($sqlFeed);
-    $sqlFeedInfo = "SELECT title, link, description FROM feeds WHERE id = $feed_id";
+    $sqlFeedInfo = "SELECT title, link, description, href FROM feeds WHERE id = $feed_id";
     $feed_info = $conn->query($sqlFeedInfo);
     $conn = null;
     $feed_info = base_fetch_lazy($feed_info);
 
-    $return_array = array("success" => true, "title" => $feed_info['title'], "link" => $feed_info['link'], "description" => $feed_info['description'], "items" => array());
+    $return_array = array("success" => true, "title" => $feed_info['title'], "link" => $feed_info['link'], "description" => $feed_info['description'], "href" => $feed_info['href'], "items" => array());
     foreach($items as $item){
       $item_array = array("title" => $item['title'], "link" => $item['link'], "description" => $item['description'], "pubDate" => $item['pubDate'], "offset" => $item['offset'], "guid" => $item['guid'], "isPermaLink" => $item['isPermaLink']);
       array_push($return_array["items"], $item_array);
