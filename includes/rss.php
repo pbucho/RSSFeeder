@@ -22,6 +22,7 @@
     }
     $feed_contents = json_decode(api_fetch_feed($feed_id), true);
 
+    header('Content-type: application/rss+xml');
     echo "<?xml version=\"1.0\"?>$NL";
     echo "<rss version=\"2.0\" $ATOM>$NL";
     echo "$TAB1<channel>$NL";
