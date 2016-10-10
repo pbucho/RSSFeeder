@@ -17,7 +17,7 @@
       $conn = null;
       return json_encode(array("success" => false, "reason" => "No feed with ID $feed_id"));
     }
-    $sqlFeed = "SELECT i.title as title, i.link as link, i.description as description, date_format(pubDate, '%a, %d %b %Y %H:%i:%s') as pubDate, pubDate as dateOrder, guid FROM feed_items i LEFT JOIN feeds f ON i.feed = f.id WHERE f.id = $feed_id ORDER BY dateOrder DESC";
+    $sqlFeed = "SELECT i.title as title, i.link as link, i.description as description, date_format(pubDate, '%a, %d %b %Y %H:%i:%s') as pubDate, pubDate as dateOrder, offset, guid, isPermaLink FROM feed_items i LEFT JOIN feeds f ON i.feed = f.id WHERE f.id = $feed_id ORDER BY dateOrder DESC";
     if(isset($ITEM_LIMIT) && $ITEM_LIMIT > 0){
       $sqlFeed .= " LIMIT $ITEM_LIMIT";
     }
@@ -29,7 +29,7 @@
 
     $return_array = array("success" => true, "title" => $feed_info['title'], "link" => $feed_info['link'], "description" => $feed_info['description'], "items" => array());
     foreach($items as $item){
-      $item_array = array("title" => $item['title'], "link" => $item['link'], "description" => $item['description'], "pubDate" => $item['pubDate'], "guid" => $item['guid']);
+      $item_array = array("title" => $item['title'], "link" => $item['link'], "description" => $item['description'], "pubDate" => $item['pubDate'], "offset" => $item['offset'], "guid" => $item['guid'], "isPermaLink" => $item['isPermaLink']);
       array_push($return_array["items"], $item_array);
     }
     return json_encode($return_array);
