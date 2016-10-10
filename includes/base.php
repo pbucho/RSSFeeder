@@ -12,4 +12,17 @@
   function base_fetch_lazy($result){
 		return $result->fetch(PDO::FETCH_LAZY);
 	}
+
+  function base_get_boolean($value){
+    if(strcmp($value, "true") === 0)
+      return true;
+    else if(strcmp($value, "false") === 0)
+      return false;
+    else if(strcmp($value, "1") === 0)
+      return true;
+    else if(strcmp($value, "0") === 0)
+      return false;
+    else
+      return null;
+  }
 ?>
