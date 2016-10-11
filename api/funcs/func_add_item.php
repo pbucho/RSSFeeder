@@ -6,8 +6,11 @@
   $RFC_REGEX = "(Mon|Tue|Wed|Thu|Fri|Sat|Sun), (\d{2}) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4}) (\d{2}:\d{2}:\d{2})";
   $MONTHS = array("Jan" => "01", "Feb" => "02", "Mar" => "03", "Apr" => "04", "May" => "05", "Jun" => "06", "Jul" => "07", "Aug" => "08", "Sep" => "09", "Oct" => "10", "Nov" => "11", "Dec" => "12");
 
-  function api_add_item($feed_id, $item_title, $item_link, $item_desc, $item_pubDate, $item_offset, $item_guid, $item_isPermaLink) {
+  function api_add_item($token, $feed_id, $item_title, $item_link, $item_desc, $item_pubDate, $item_offset, $item_guid, $item_isPermaLink) {
     global $RFC_REGEX, $MONTHS, $DEBUG;
+    if(is_null($token)) {
+	return json_encode(array("success" => false, "reason" => "Missing token"));
+    }
     if(is_null($feed_id)) {
       return json_encode(array("success" => false, "reason" => "No feed ID provided"));
     }
