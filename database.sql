@@ -20,3 +20,11 @@ CREATE TABLE IF NOT EXISTS `feed_items` (
   PRIMARY KEY (`id`),
   FOREIGN KEY (`feed`) REFERENCES `feeds` (`id`)
 );
+
+CREATE TABLE IF NOT EXISTS `authentication` (
+  `token` varchar(50) NOT NULL,
+  `owner` int(11) DEFAULT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `expiry` datetime DEFAULT NULL,
+  PRIMARY KEY (`token`)
+);
