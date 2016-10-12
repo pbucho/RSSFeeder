@@ -25,4 +25,16 @@
     else
       return null;
   }
+
+  // http://php.net/manual/en/function.json-last-error.php#115980
+  function base_utf8ize($d) {
+    if (is_array($d)) {
+      foreach ($d as $k => $v) {
+        $d[$k] = base_utf8ize($v);
+      }
+    } else if (is_string ($d)) {
+      return utf8_encode($d);
+    }
+    return $d;
+  }
 ?>

@@ -32,6 +32,7 @@
       $item_array = array("title" => $item['title'], "link" => $item['link'], "description" => $item['description'], "pubDate" => $item['pubDate'], "offset" => $item['offset'], "guid" => $item['guid'], "isPermaLink" => $item['isPermaLink']);
       array_push($return_array["items"], $item_array);
     }
+    $return_array = base_utf8ize($return_array);
     return json_encode($return_array);
   }
 ?>
