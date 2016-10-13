@@ -9,7 +9,10 @@
 
   function api_add_item($token, $feed_id, $item_title, $item_link, $item_desc, $item_pubDate, $item_offset, $item_guid, $item_isPermaLink) {
     global $RFC_REGEX, $MONTHS, $DEBUG;
-    if(is_null($token)) {
+    if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+		return json_encode(array("success" => false, "reason" => "Must issue a POST request"));
+	}
+	if(is_null($token)) {
       return json_encode(array("success" => false, "reason" => "Missing token"));
     }
 
