@@ -1,5 +1,6 @@
 <?php
 	include_once("includes/auth.php");
+	include_once("includes/cookies.php");
 
 	if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username']) && isset($_POST['password'])){
 		$loginFailed = false;
@@ -9,7 +10,9 @@
 		if(!auth_validate_login($user, $pswd)){
 			$loginFailed = true;
 		}else{
-			// proceed
+			$token = auth_generate_and_persist_token(null);
+			cookies_create_or_update_cookie_no_exp("token", $token);
+			header("Location: /backend/dashboard.php");
 		}
 	}
 ?>

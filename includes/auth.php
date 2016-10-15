@@ -60,4 +60,17 @@
 			return null;
 		}
 	}
+
+	function auth_invalidate_token($token) {
+		$sqlInvalidate = "DELETE FROM authentication WHERE token = '$token'";
+		$conn = base_get_connection();
+		try{
+			$conn->query($sqlInvalidate);
+			$conn = null;
+			return true;
+		}catch(PDOException $e){
+			$conn = null;
+			return false;
+		}
+	}
 ?>
