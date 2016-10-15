@@ -9,51 +9,42 @@
 
   function api_add_item($token, $feed_id, $item_title, $item_link, $item_desc, $item_pubDate, $item_offset, $item_guid, $item_isPermaLink) {
     global $RFC_REGEX, $MONTHS, $DEBUG;
-    if($_SERVER['REQUEST_METHOD'] !== 'POST'){
-		return json_encode(array("success" => false, "reason" => "Must issue a POST request"));
-	}
-	if(is_null($token)) {
+    
+    if($_SERVER['REQUEST_METHOD'] !== 'POST')
+      return json_encode(array("success" => false, "reason" => "Must issue a POST request"));
+
+    if(is_null($token))
       return json_encode(array("success" => false, "reason" => "Missing token"));
-    }
 
-    if(!auth_validate_token($token)){
+    if(!auth_validate_token($token))
       return json_encode(array("success" => false, "reason" => "Invalid token"));
-    }
 
-    if(is_null($feed_id)) {
+    if(is_null($feed_id))
       return json_encode(array("success" => false, "reason" => "No feed ID provided"));
-    }
 
-    if(is_null($item_title)){
+    if(is_null($item_title))
       return json_encode(array("success" => false, "reason" => "No title provided"));
-    }
 
-    if(is_null($item_link)){
+    if(is_null($item_link))
       return json_encode(array("success" => false, "reason" => " No link provided"));
-    }
 
-    if(is_null($item_desc)){
+    if(is_null($item_desc))
       return json_encode(array("success" => false, "reason" => "No description provided"));
-    }
 
-    if(!is_null($item_pubDate) && preg_match("($RFC_REGEX)", $item_pubDate) != 1){
+    if(!is_null($item_pubDate) && preg_match("($RFC_REGEX)", $item_pubDate) != 1)
       return json_encode(array("success" => false, "reason" => "pubDate must comply with RFC 2822 (without offset)"));
-    }
 
-    if(!is_null($item_offset) && preg_match("([+-]\d{4})", $item_offset) != 1){
+    if(!is_null($item_offset) && preg_match("([+-]\d{4})", $item_offset) != 1)
       return json_encode(array("success" => false, "reason" => "Offset must comply with RFC 2822"));
-    }
 
-    if(!is_null($item_isPermaLink) && is_null(base_get_boolean($item_isPermaLink))){
+    if(!is_null($item_isPermaLink) && is_null(base_get_boolean($item_isPermaLink)))
       return json_encode(array("success" => false, "reason" => "isPermaLink must be boolean"));
-    }
 
     if(!is_null($item_pubDate)){
       preg_match("($RFC_REGEX)", $item_pubDate, $splitten);
       $parsed_date = $splitten[4]."-".$MONTHS[$splitten[3]]."-".$splitten[2]." ".$splitten[5];
-    }else{
+    }else
       $parsed_date = null;
-    }
 
     $item_isPermaLink = base_get_boolean($item_isPermaLink);
 
@@ -73,14 +64,11 @@
     try{
       $result = $conn->query($sqlAdd);
       $conn = null;
-
       return json_encode(array("success" => true));
     }catch(PDOException $e){
       $conn = null;
       $return_array = array('success' => false, 'reason' => 'Unknown error', 'code' => $e->getCode());
-      if($DEBUG){
-        array_push($return_array['message'], $e->getMessage());
-      }
+      if($DEBUG) array_push($return_array['message'], $e->getMessage());
       return json_encode($return_array);
     }
   }

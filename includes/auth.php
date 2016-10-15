@@ -2,6 +2,21 @@
 	$DOC_ROOT = $_SERVER['DOCUMENT_ROOT'];
 	include_once("base.php");
 
+	function auth_validate_login($user, $pswd) {
+		$sqlValidate = "SELECT password FROM users WHERE name ='$user'";
+		$conn = base_get_connection();
+		try{
+			$result = $conn->query($sqlValidate);
+			$conn = null;
+			$result = base_fetch_lazy($result)['password'];
+
+			return password_verify($pswd, $result);
+		}catch(PDOException $e){
+			$conn = null;
+			return false;
+		}
+	}
+
 	function auth_validate_token($token) {
 		$sqlValidate = "SELECT token, expiry FROM authentication WHERE token = '$token'";
 		$conn = base_get_connection();

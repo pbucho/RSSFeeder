@@ -21,10 +21,21 @@ CREATE TABLE IF NOT EXISTS `feed_items` (
   FOREIGN KEY (`feed`) REFERENCES `feeds` (`id`)
 );
 
+CREATE TABLE IF NOT EXISTS `users` (
+	`id` int(11) NOT NULL,
+	`name` varchar(25) NOT NULL,
+	`password` varchar(255) NOT NULL,
+	`registered` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`last_login` datetime,
+	`last_ip` varchar(255),
+	PRIMARY KEY(`id`)
+);
+
 CREATE TABLE IF NOT EXISTS `authentication` (
   `token` varchar(50) NOT NULL,
-  `owner` int(11) DEFAULT NULL,
+  `owner` int(11) NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `expiry` datetime DEFAULT NULL,
-  PRIMARY KEY (`token`)
+  PRIMARY KEY (`token`),
+  FOREIGN KEY (`owner`) REFERENCES `users` (`id`)
 );
