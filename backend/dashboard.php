@@ -1,11 +1,10 @@
 <?php
 	$DOC_ROOT = $_SERVER['DOCUMENT_ROOT'];
+	include_once($DOC_ROOT."/includes/conf.php");
 	include_once($DOC_ROOT."/includes/cookies.php");
+	include_once($DOC_ROOT."/api/funcs/func_list_feeds.php");
 
-	$token = cookies_has_session();
-	if($token == false){
-		header("Location: /index.php");
-	}
+	$token = auth_verify_login(null);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -126,72 +125,48 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr>
-													<td>ace.com</td>
-													<td>$45</td>
-													<td>3,330</td>
-													<td>
-														<div class="hidden-sm hidden-xs btn-group">
-															<button class="btn btn-xs btn-success">
-																<i class="ace-icon fa fa-check bigger-120"></i>
-															</button>
-															<button class="btn btn-xs btn-info">
-																<i class="ace-icon fa fa-pencil bigger-120"></i>
-															</button>
-															<button class="btn btn-xs btn-danger">
-																<i class="ace-icon fa fa-trash-o bigger-120"></i>
-															</button>
-															<button class="btn btn-xs btn-warning">
-																<i class="ace-icon fa fa-flag bigger-120"></i>
-															</button>
-														</div>
-													</td>
-												</tr>
+												<?php
+													$feeds = json_decode(api_list_feeds($_COOKIE['token']), true);
+													if(!$feeds['success']){
+														echo "<div class=\"alert alert-danger\">An error occurred while fetching feeds.";
+														if($DEBUG) echo " Reason: ".$feeds['reason'];
+														echo "</div>";
+													}else{
+														$feeds = $feeds['items'];
+														foreach($feeds as $feed){
+															echo "<tr>";
+															echo "<td>".$feed['title']."</td>";
+															echo "<td><a href=\"//".$feed['link']."\" target=\"_blank\">".$feed['link']."</a></td>";
+															echo "<td>".$feed['description']."</td>";
+															echo "<td><div class=\"hidden-sm hidden-xs btn-group\">";
+															echo "<button class=\"btn btn-xs btn-success\" title=\"New post\" onclick=\"window.location='new-post.php'\"><i class=\"ace-icon fa fa-edit bigger-120\"></i></button>";
+															echo "<button class=\"btn btn-xs btn-info\" title=\"Edit feed\"><i class=\"ace-icon fa fa-pencil bigger-120\"></i></button>";
+															echo "<button class=\"btn btn-xs btn-danger\" title=\"Delete feed\"><i class=\"ace-icon fa fa-trash-o bigger-120\"></i></button>";
+															echo "</div></td>";
+															echo "</tr>";
+														}
+													}
+												?>
 											</tbody>
 										</table>
 									</div><!-- /.span -->
 								</div><!-- /.row -->
 								<div class="hr hr-18 dotted hr-double"></div>
-								vou aqui
 								<!-- PAGE CONTENT ENDS -->
 							</div><!-- /.col -->
 						</div><!-- /.row -->
 					</div><!-- /.page-content -->
 				</div>
 			</div><!-- /.main-content -->
-			<div class="footer">
-				<div class="footer-inner">
-					<div class="footer-content">
-						<span class="bigger-120">
-							<span class="blue bolder">Ace</span>
-							Application &copy; 2013-2014
-						</span>
-						&nbsp; &nbsp;
-						<span class="action-buttons">
-							<a href="#">
-								<i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
-							</a>
-							<a href="#">
-								<i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
-							</a>
-							<a href="#">
-								<i class="ace-icon fa fa-rss-square orange bigger-150"></i>
-							</a>
-						</span>
-					</div>
-				</div>
-			</div>
-			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-				<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
-			</a>
+			<?php include($DOC_ROOT."/assets/footer.php"); ?>
 		</div><!-- /.main-container -->
 		<!-- basic scripts -->
 		<!--[if !IE]> -->
 		<script src="/assets/js/jquery-2.1.4.min.js"></script>
 		<!-- <![endif]-->
 		<!--[if IE]>
-<script src="/assets/js/jquery-1.11.3.min.js"></script>
-<![endif]-->
+			<script src="/assets/js/jquery-1.11.3.min.js"></script>
+		<![endif]-->
 		<script type="text/javascript">
 			if('ontouchstart' in document.documentElement) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
 		</script>
@@ -227,44 +202,6 @@
 						style: 'multi'
 					}
 			    } );
-				$.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';
-				new $.fn.dataTable.Buttons( myTable, {
-					buttons: [
-					  {
-						"extend": "colvis",
-						"text": "<i class='fa fa-search bigger-110 blue'></i> <span class='hidden'>Show/hide columns</span>",
-						"className": "btn btn-white btn-primary btn-bold",
-						columns: ':not(:first):not(:last)'
-					  },
-					  {
-						"extend": "copy",
-						"text": "<i class='fa fa-copy bigger-110 pink'></i> <span class='hidden'>Copy to clipboard</span>",
-						"className": "btn btn-white btn-primary btn-bold"
-					  },
-					  {
-						"extend": "csv",
-						"text": "<i class='fa fa-database bigger-110 orange'></i> <span class='hidden'>Export to CSV</span>",
-						"className": "btn btn-white btn-primary btn-bold"
-					  },
-					  {
-						"extend": "excel",
-						"text": "<i class='fa fa-file-excel-o bigger-110 green'></i> <span class='hidden'>Export to Excel</span>",
-						"className": "btn btn-white btn-primary btn-bold"
-					  },
-					  {
-						"extend": "pdf",
-						"text": "<i class='fa fa-file-pdf-o bigger-110 red'></i> <span class='hidden'>Export to PDF</span>",
-						"className": "btn btn-white btn-primary btn-bold"
-					  },
-					  {
-						"extend": "print",
-						"text": "<i class='fa fa-print bigger-110 grey'></i> <span class='hidden'>Print</span>",
-						"className": "btn btn-white btn-primary btn-bold",
-						autoPrint: false,
-						message: 'This print was produced using the Print button for DataTables'
-					  }
-					]
-				} );
 				myTable.buttons().container().appendTo( $('.tableTools-container') );
 				//style the message box
 				var defaultCopyAction = myTable.button(1).action();
@@ -301,66 +238,6 @@
 					}
 				} );
 				/////////////////////////////////
-				//table checkboxes
-				$('th input[type=checkbox], td input[type=checkbox]').prop('checked', false);
-				//select/deselect all rows according to table header checkbox
-				$('#dynamic-table > thead > tr > th input[type=checkbox], #dynamic-table_wrapper input[type=checkbox]').eq(0).on('click', function(){
-					var th_checked = this.checked;//checkbox inside "TH" table header
-					$('#dynamic-table').find('tbody > tr').each(function(){
-						var row = this;
-						if(th_checked) myTable.row(row).select();
-						else  myTable.row(row).deselect();
-					});
-				});
-				//select/deselect a row when the checkbox is checked/unchecked
-				$('#dynamic-table').on('click', 'td input[type=checkbox]' , function(){
-					var row = $(this).closest('tr').get(0);
-					if(this.checked) myTable.row(row).deselect();
-					else myTable.row(row).select();
-				});
-				$(document).on('click', '#dynamic-table .dropdown-toggle', function(e) {
-					e.stopImmediatePropagation();
-					e.stopPropagation();
-					e.preventDefault();
-				});
-				//And for the first simple table, which doesn't have TableTools or dataTables
-				//select/deselect all rows according to table header checkbox
-				var active_class = 'active';
-				$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
-					var th_checked = this.checked;//checkbox inside "TH" table header
-					$(this).closest('table').find('tbody > tr').each(function(){
-						var row = this;
-						if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
-						else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
-					});
-				});
-				//select/deselect a row when the checkbox is checked/unchecked
-				$('#simple-table').on('click', 'td input[type=checkbox]' , function(){
-					var $row = $(this).closest('tr');
-					if($row.is('.detail-row ')) return;
-					if(this.checked) $row.addClass(active_class);
-					else $row.removeClass(active_class);
-				});
-				/********************************/
-				//add tooltip for small view action buttons in dropdown menu
-				$('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
-				//tooltip placement on right or left
-				function tooltip_placement(context, source) {
-					var $source = $(source);
-					var $parent = $source.closest('table')
-					var off1 = $parent.offset();
-					var w1 = $parent.width();
-					var off2 = $source.offset();
-					//var w2 = $source.width();
-					if( parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2) ) return 'right';
-					return 'left';
-				}
-				/***************/
-				$('.show-details-btn').on('click', function(e) {
-					e.preventDefault();
-					$(this).closest('tr').next().toggleClass('open');
-					$(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
-				});
 				$(document).ready(function(){
 					$("#sidebar-feeds").addClass("active");
 				});

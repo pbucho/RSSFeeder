@@ -1,6 +1,17 @@
 <?php
-	$DOC_ROOT = $_SERVER['DOCUMENT_ROOT'];
 	include_once("base.php");
+	include_once("cookies.php");
+
+	function auth_verify_login($defaultPage) {
+		$token = cookies_has_session();
+		if($token == false){
+			if(is_null($defaultPage))
+				header("Location: /index.php");
+			else
+				header("Location: /$defaultPage");
+		}else
+			return $token;
+	}
 
 	function auth_validate_login($user, $pswd) {
 		$sqlValidate = "SELECT password FROM users WHERE name ='$user'";

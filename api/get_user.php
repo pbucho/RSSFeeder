@@ -1,6 +1,6 @@
 <?php
-  include_once("funcs/func_list_feeds.php");
+  include_once("funcs/func_get_user.php");
   if($_SERVER['REQUEST_METHOD'] !== 'POST')
     return json_encode(array('success' => false, 'reason' => 'Must issue a POST request'));
-  echo api_list_feeds(isset($_POST['token']) ? $_POST['token'] : null);
+  echo api_get_user(isset($_POST['token']) ? $_POST['token'] : null);
 ?>

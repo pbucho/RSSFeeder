@@ -1,3 +1,7 @@
+<?php
+  $DOC_ROOT = $_SERVER['DOCUMENT_ROOT'];
+  include_once($DOC_ROOT."/api/funcs/func_get_user.php");
+?>
 <div id="navbar" class="navbar navbar-default ace-save-state">
   <div class="navbar-container ace-save-state" id="navbar-container">
     <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
@@ -21,7 +25,7 @@
             <img class="nav-user-photo" src="/assets/images/avatars/avatar5.png" />
             <span class="user-info">
               <small>Welcome,</small>
-              batata
+              <?php echo json_decode(api_get_user($_COOKIE['token']), true)['username']; ?>
             </span>
             <i class="ace-icon fa fa-caret-down"></i>
           </a>
