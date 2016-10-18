@@ -20,7 +20,11 @@
 		<!-- page specific plugin styles -->
 		<link rel="stylesheet" href="/assets/css/jquery-ui.custom.min.css" />
 		<link rel="stylesheet" href="/assets/css/chosen.min.css" />
+		<link rel="stylesheet" href="/assets/css/bootstrap-datepicker3.min.css" />
+		<link rel="stylesheet" href="/assets/css/bootstrap-timepicker.min.css" />
+		<link rel="stylesheet" href="/assets/css/daterangepicker.min.css" />
 		<link rel="stylesheet" href="/assets/css/bootstrap-datetimepicker.min.css" />
+		<link rel="stylesheet" href="/assets/css/bootstrap-colorpicker.min.css" />
 		<!-- text fonts -->
 		<link rel="stylesheet" href="/assets/css/fonts.googleapis.com.css" />
 		<!-- ace styles -->
@@ -122,23 +126,17 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1">Title</label>
 										<div class="col-sm-9">
-											<input type="text" id="form-field-1-1" placeholder="Post title" class="form-control" />
+											<input type="text" placeholder="Post title" class="form-control" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1">Link</label>
 										<div class="col-sm-9">
-											<input type="text" id="form-field-1-1" placeholder="Post link" class="form-control" />
+											<input type="text" placeholder="Post link" class="form-control" />
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-left" for="form-field-8">Description</label>
-										<div class="col-sm-9">
-											<textarea class="form-control" id="form-field-8" placeholder="Post description"></textarea>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-left" for="date-timepicker1">Date/Time Picker</label>
+										<label class="col-sm-3 control-label no-padding-right" for="date-timepicker1">Date/Time Picker</label>
 										<div class="input-group col-sm-9">
 											<input id="date-timepicker1" type="text" class="form-control" />
 											<span class="input-group-addon">
@@ -149,7 +147,7 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1">Unique ID</label>
 										<div class="col-sm-9">
-											<input type="text" id="form-field-1-1" placeholder="Post guid" class="form-control" />
+											<input type="text" placeholder="Post guid" class="form-control" />
 										</div>
 									</div>
 									<div class="form-group">
@@ -161,16 +159,37 @@
 											</label>
 										</div>
 									</div>
+									<div class="form-group">
+										<div class="col-sm-3"></div>
+										<div class="checkbox col-sm-9">
+											<label>
+												<input id="define-offset" name="form-field-checkbox" type="checkbox" class="ace" />
+												<span class="lbl"> Define offset</span>
+											</label>
+										</div>
+									</div>
+									<div id="offset-group" class="hidden form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1">Offset</label>
+										<div class="col-sm-9">
+											<input type="text" placeholder="Post guid" class="form-control" value="+0000"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1">Description</label>
+										<div class="col-sm-9">
+											<textarea rows="10" class="form-control" placeholder="Post description"></textarea>
+										</div>
+									</div>
 									<div class="clearfix form-actions">
 										<div class="col-md-offset-3 col-md-9">
 											<button class="btn btn-info" type="button">
 												<i class="ace-icon fa fa-check bigger-110"></i>
-												Submit
+												Post
 											</button>
 											&nbsp; &nbsp; &nbsp;
 											<button class="btn" type="reset">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
-												Reset
+												Cancel
 											</button>
 										</div>
 									</div>
@@ -198,31 +217,23 @@
 		  <script src="/assets/js/excanvas.min.js"></script>
 		<![endif]-->
 		<script src="/assets/js/jquery-ui.custom.min.js"></script>
-		<script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
 		<script src="/assets/js/chosen.jquery.min.js"></script>
+		<script src="/assets/js/bootstrap-datepicker.min.js"></script>
+		<script src="/assets/js/bootstrap-timepicker.min.js"></script>
 		<script src="/assets/js/moment.min.js"></script>
+		<script src="/assets/js/daterangepicker.min.js"></script>
 		<script src="/assets/js/bootstrap-datetimepicker.min.js"></script>
+		<script src="/assets/js/bootstrap-colorpicker.min.js"></script>
+		<script src="/assets/js/jquery.knob.min.js"></script>
+		<script src="/assets/js/autosize.min.js"></script>
+		<script src="/assets/js/jquery.inputlimiter.min.js"></script>
 		<script src="/assets/js/jquery.maskedinput.min.js"></script>
-		<script src="/assets/js/bootstrap-tag.min.js"></script>
 		<!-- ace scripts -->
 		<script src="/assets/js/ace-elements.min.js"></script>
 		<script src="/assets/js/ace.min.js"></script>
 		<!-- inline scripts related to this page -->
 		<script type="text/javascript">
 			jQuery(function($) {
-				$('#id-disable-check').on('click', function() {
-					var inp = $('#form-input-readonly').get(0);
-					if(inp.hasAttribute('disabled')) {
-						inp.setAttribute('readonly' , 'true');
-						inp.removeAttribute('disabled');
-						inp.value="This text field is readonly!";
-					}
-					else {
-						inp.setAttribute('disabled' , 'disabled');
-						inp.removeAttribute('readonly');
-						inp.value="This text field is disabled!";
-					}
-				});
 				if(!ace.vars['touch']) {
 					$('.chosen-select').chosen({allow_single_deselect:true});
 					//resize the chosen on window resize
@@ -256,34 +267,6 @@
 					remText: '%n character%s remaining...',
 					limitText: 'max allowed : %n.'
 				});
-				$.mask.definitions['~']='[+-]';
-				$('.input-mask-date').mask('99/99/9999');
-				$('.input-mask-phone').mask('(999) 999-9999');
-				$('.input-mask-eyescript').mask('~9.99 ~9.99 999');
-				$(".input-mask-product").mask("a*-999-a999",{placeholder:" ",completed:function(){alert("You typed the following: "+this.val());}});
-				$( "#input-size-slider" ).css('width','200px').slider({
-					value:1,
-					range: "min",
-					min: 1,
-					max: 8,
-					step: 1,
-					slide: function( event, ui ) {
-						var sizing = ['', 'input-sm', 'input-lg', 'input-mini', 'input-small', 'input-medium', 'input-large', 'input-xlarge', 'input-xxlarge'];
-						var val = parseInt(ui.value);
-						$('#form-field-4').attr('class', sizing[val]).attr('placeholder', '.'+sizing[val]);
-					}
-				});
-				$( "#input-span-slider" ).slider({
-					value:1,
-					range: "min",
-					min: 1,
-					max: 12,
-					step: 1,
-					slide: function( event, ui ) {
-						var val = parseInt(ui.value);
-						$('#form-field-5').attr('class', 'col-xs-'+val).val('.col-xs-'+val);
-					}
-				});
 				//datepicker plugin
 				//link
 				$('.date-picker').datepicker({
@@ -308,22 +291,8 @@
 				.prev().on(ace.click_event, function(){
 					$(this).next().focus();
 				});
-				$('#timepicker1').timepicker({
-					minuteStep: 1,
-					showSeconds: true,
-					showMeridian: false,
-					disableFocus: true,
-					icons: {
-						up: 'fa fa-chevron-up',
-						down: 'fa fa-chevron-down'
-					}
-				}).on('focus', function() {
-					$('#timepicker1').timepicker('showWidget');
-				}).next().on(ace.click_event, function(){
-					$(this).prev().focus();
-				});
 				if(!ace.vars['old_ie']) $('#date-timepicker1').datetimepicker({
-				 //format: 'MM/DD/YYYY h:mm:ss A',//use this option to display seconds
+				 format: 'YYYY-MM-DD HH:mm:ss',
 				 icons: {
 					time: 'fa fa-clock-o',
 					date: 'fa fa-calendar',
@@ -338,75 +307,21 @@
 				}).next().on(ace.click_event, function(){
 					$(this).prev().focus();
 				});
-				$('#colorpicker1').colorpicker();
-				//$('.colorpicker').last().css('z-index', 2000);//if colorpicker is inside a modal, its z-index should be higher than modal'safe
-				$('#simple-colorpicker-1').ace_colorpicker();
-				//$('#simple-colorpicker-1').ace_colorpicker('pick', 2);//select 2nd color
-				//$('#simple-colorpicker-1').ace_colorpicker('pick', '#fbe983');//select #fbe983 color
-				//var picker = $('#simple-colorpicker-1').data('ace_colorpicker')
-				//picker.pick('red', true);//insert the color if it doesn't exist
-				$(".knob").knob();
-				var tag_input = $('#form-field-tags');
-				try{
-					tag_input.tag(
-					  {
-						placeholder:tag_input.attr('placeholder'),
-						//enable typeahead by specifying the source array
-						source: ace.vars['US_STATES'],//defined in ace.js >> ace.enable_search_ahead
-						/**
-						//or fetch data from database, fetch those that match "query"
-						source: function(query, process) {
-						  $.ajax({url: 'remote_source.php?q='+encodeURIComponent(query)})
-						  .done(function(result_items){
-							process(result_items);
-						  });
-						}
-						*/
-					  }
-					)
-					//programmatically add/remove a tag
-					var $tag_obj = $('#form-field-tags').data('tag');
-					$tag_obj.add('Programmatically Added');
-					var index = $tag_obj.inValues('some tag');
-					$tag_obj.remove(index);
-				}
-				catch(e) {
-					//display a textarea for old IE, because it doesn't support this plugin or another one I tried!
-					tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="3">'+tag_input.val()+'</textarea>').remove();
-					//autosize($('#form-field-tags'));
-				}
 				/////////
-				$('#modal-form input[type=file]').ace_file_input({
-					style:'well',
-					btn_choose:'Drop files here or click to choose',
-					btn_change:null,
-					no_icon:'ace-icon fa fa-cloud-upload',
-					droppable:true,
-					thumbnail:'large'
-				})
-				//chosen plugin inside a modal will have a zero width because the select element is originally hidden
-				//and its width cannot be determined.
-				//so we set the width after modal is show
-				$('#modal-form').on('shown.bs.modal', function () {
-					if(!ace.vars['touch']) {
-						$(this).find('.chosen-container').each(function(){
-							$(this).find('a:first-child').css('width' , '210px');
-							$(this).find('.chosen-drop').css('width' , '210px');
-							$(this).find('.chosen-search input').css('width' , '200px');
-						});
-					}
-				})
-				/**
-				//or you can activate the chosen plugin after modal is shown
-				//this way select element becomes visible with dimensions and chosen works as expected
-				$('#modal-form').on('shown', function () {
-					$(this).find('.modal-chosen').chosen();
-				})
-				*/
 				$(document).one('ajaxloadstart.page', function(e) {
 					autosize.destroy('textarea[class*=autosize]')
 					$('.limiterBox,.autosizejs').remove();
 					$('.daterangepicker.dropdown-menu,.colorpicker.dropdown-menu,.bootstrap-datetimepicker-widget.dropdown-menu').remove();
+				});
+				$('#define-offset').on('click', function(){
+					if(this.checked)
+						$('#offset-group').removeClass('hidden');
+					else
+						$('#offset-group').addClass('hidden');
+				});
+				$(document).ready(function(){
+					$("#sidebar-posts").addClass("active open");
+					$("#sidebar-posts-new").addClass("active");
 				});
 			});
 		</script>
