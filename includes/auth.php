@@ -9,7 +9,7 @@
 		*/
 		public function validateLogin($user, $pswd) {
 			$sqlValidate = "SELECT password FROM users WHERE name ='$user'";
-			$conn = base_get_connection();
+			$conn = (new Base())->getConnection();
 			try{
 				$result = $conn->query($sqlValidate);
 				$conn = null;
@@ -30,34 +30,34 @@
 		public function verifyLogin() {
 			$token = cookies_has_session();
 			if(!is_null($token)){
-				return auth_validate_token($token) === false ? null : $token;
+				return $this->validateToken($token) === false ? null : $token;
 			}
 			else return null;
 		}
-	}
 
-	function auth_validate_token($token) {
-		$sqlValidate = "SELECT token, expiry FROM authentication WHERE token = '$token'";
-		$conn = base_get_connection();
-		$result = $conn->query($sqlValidate);
-		$conn = null;
+		public function validateToken($token) {
+			$sqlValidate = "SELECT token, expiry FROM authentication WHERE token = '$token'";
+			$conn = base_get_connection();
+			$result = $conn->query($sqlValidate);
+			$conn = null;
 
-		$result = base_fetch_lazy($result);
-		if($result == false){
-			return false;
+			$result = base_fetch_lazy($result);
+			if($result == false){
+				return false;
+			}
+
+			if(is_null($result['expiry']))
+				return true;
+
+			$expiry = new DateTime($result['expiry'], new DateTimeZone("UTC"));
+			$expiry = $expiry->getTimestamp();
+			$now = time();
+
+			if($now > $expiry)
+				return true;
+			else
+				return false;
 		}
-
-		if(is_null($result['expiry']))
-			return true;
-
-		$expiry = new DateTime($result['expiry'], new DateTimeZone("UTC"));
-		$expiry = $expiry->getTimestamp();
-		$now = time();
-
-		if($now > $expiry)
-			return true;
-		else
-			return false;
 	}
 
 	function auth_generate_token() {

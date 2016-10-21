@@ -2,7 +2,7 @@
   require("../includes/base.php");
   require("../includes/auth.php");
 
-  class AuthTest extends PHPUnit_Framework_TestCase {
+  class AuthValidateLoginTest extends PHPUnit_Framework_TestCase {
     public static function setupBeforeClass() {
       $sqlTruncTokens = "TRUNCATE TABLE authentication";
       $conn = (new Base())->getConnection();

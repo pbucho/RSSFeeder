@@ -2,7 +2,7 @@
   require("../includes/base.php");
   require("../includes/auth.php");
 
-  class AuthTest extends PHPUnit_Framework_TestCase {
+  class AuthVerifyLoginTest extends PHPUnit_Framework_TestCase {
     protected $base;
 
     protected function setUp() {
