@@ -20,12 +20,12 @@
       $conn = null;
 
       $auth = new Auth();
-      $result = $auth->validateLogin("testUser","testPassword");
-      $this->assertTrue($result);
+      $this->assertTrue($auth->validateLogin("testUser","testPassword"));
     }
 
-    protected function tearDown() {
-      $conn = null;
+    public function testPasswordValidation2() {
+      $auth = new Auth();
+      $this->assertFalse($auth->validateLogin("testUser","testPassword"));
     }
   }
 ?>
