@@ -3,6 +3,10 @@
 	include_once("cookies.php");
 
 	class Auth {
+
+		/**
+		*	Receives a username and a password and checks if they form a valid login
+		*/
 		public function validateLogin($user, $pswd) {
 			$sqlValidate = "SELECT password FROM users WHERE name ='$user'";
 			$conn = base_get_connection();
@@ -17,17 +21,19 @@
 				return false;
 			}
 		}
-	}
 
-	function auth_verify_login($defaultPage) {
-		$token = cookies_has_session();
-		if($token == false){
-			if(is_null($defaultPage))
-				header("Location: /index.php");
-			else
-				header("Location: /$defaultPage");
-		}else
-			return $token;
+		/**
+		*	Verifies if there is a valid login from the user-provided cookies. Returns
+		* the corresponding token if there is a valid login, and returns null if
+		*	tere's not.
+		*/
+		public function verifyLogin() {
+			$token = cookies_has_session();
+			if(!is_null($token)){
+				return auth_validate_token($token) === false ? null : $token;
+			}
+			else return null;
+		}
 	}
 
 	function auth_validate_token($token) {
