@@ -2,6 +2,23 @@
 	include_once("base.php");
 	include_once("cookies.php");
 
+	class Auth {
+		public function validateLogin($user, $pswd) {
+			$sqlValidate = "SELECT password FROM users WHERE name ='$user'";
+			$conn = base_get_connection();
+			try{
+				$result = $conn->query($sqlValidate);
+				$conn = null;
+				$result = base_fetch_lazy($result)['password'];
+
+				return password_verify($pswd, $result);
+			}catch(PDOException $e){
+				$conn = null;
+				return false;
+			}
+		}
+	}
+
 	function auth_verify_login($defaultPage) {
 		$token = cookies_has_session();
 		if($token == false){
@@ -11,21 +28,6 @@
 				header("Location: /$defaultPage");
 		}else
 			return $token;
-	}
-
-	function auth_validate_login($user, $pswd) {
-		$sqlValidate = "SELECT password FROM users WHERE name ='$user'";
-		$conn = base_get_connection();
-		try{
-			$result = $conn->query($sqlValidate);
-			$conn = null;
-			$result = base_fetch_lazy($result)['password'];
-
-			return password_verify($pswd, $result);
-		}catch(PDOException $e){
-			$conn = null;
-			return false;
-		}
 	}
 
 	function auth_validate_token($token) {
