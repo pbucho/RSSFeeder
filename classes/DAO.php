@@ -1,16 +1,30 @@
 <?php
-  require_once("../includes/base.php");
+  require_once("../includes/conf.php");
+  require_once("../includes/conf_test.php");
   require_once("User.php");
 
   class DAO {
+    public function getConnection(){
+      global $server, $database, $username, $password;
+      global $serverTest, $databaseTest, $usernameTest, $passwordTest, $DEBUG;
+      if($DEBUG){
+        $server = $serverTest;
+        $database = $databaseTest;
+        $username = $usernameTest;
+        $password = $passwordTest;
+      }
+
+      $conn = new PDO("mysql:host=$server;dbname=$database", $username, $password);
+      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      return $conn;
+    }
 
     public function getUserById($userId) {
       if(!is_int($userId)){
         throw new Exception("User ID must be an integer");
       }
       $sqlUser = "SELECT id, name, password, registered, last_login, last_ip FROM users WHERE id = $userId";
-      $base = new Base();
-      $conn = $base->getConnection();
+      $conn = $this->getConnection();
       $storedUser = $conn->query($sqlUser);
       $conn = null;
 

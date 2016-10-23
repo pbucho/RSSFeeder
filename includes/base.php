@@ -2,23 +2,6 @@
   include_once("conf.php");
   include_once("conf_test.php");
 
-  class Base {
-    public function getConnection(){
-      global $server, $database, $username, $password;
-      global $serverTest, $databaseTest, $usernameTest, $passwordTest, $DEBUG;
-      if($DEBUG){
-        $server = $serverTest;
-        $database = $databaseTest;
-        $username = $usernameTest;
-        $password = $passwordTest;
-      }
-
-      $conn = new PDO("mysql:host=$server;dbname=$database", $username, $password);
-      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      return $conn;
-    }
-  }
-
   function base_get_connection(){
     global $server, $database, $username, $password;
 

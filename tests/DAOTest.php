@@ -7,12 +7,11 @@
 
     public function testDaoUser() {
       $sqlUser = "INSERT INTO users (id, name, password, registered, last_login, last_ip) VALUES (250, 'testUser', 'testPassword', '20161023161113', NULL, NULL)";
-      $conn = (new Base())->getConnection();
+      $conn = (new DAO())->getConnection();
       $conn->query($sqlUser);
       $conn = null;
 
-      $dao = new DAO();
-      $user = $dao->getUserById(250);
+      $user = (new DAO())->getUserById(250);
 
       $this->assertEquals(250, $user->getId());
       $this->assertEquals("testUser", $user->getName());

@@ -2,19 +2,20 @@
   require_once("GlobalTestConfig.php");
   require_once("../includes/base.php");
   require_once("../includes/auth.php");
+  require_once("../classes/DAO.php");
 
   class AuthValidateLoginTest extends GlobalTestConfig {
 
     public static function setupBeforeClass() {
       $sqlTruncTokens = "TRUNCATE TABLE authentication";
-      $conn = (new Base())->getConnection();
+      $conn = (new DAO())->getConnection();
       $conn->query($sqlTruncTokens);
       $conn = null;
     }
 
     public function testPasswordValidation() {
       $sqlIns = "INSERT INTO users (id, name, password, registered, last_login, last_ip) VALUES (1, 'testUser', '\$2y\$10\$5rOG.sLJ28/4X4gu5J7wBedKLqy77NG5OVt6n8iRH1Q2tZwDqzjim', NOW(), NULL, NULL)";
-      $conn = (new Base())->getConnection();
+      $conn = (new DAO())->getConnection();
       $conn->query($sqlIns);
       $conn = null;
 
@@ -29,7 +30,7 @@
 
     public function testPasswordWrongPassword() {
       $sqlIns = "INSERT INTO users (id, name, password, registered, last_login, last_ip) VALUES (1, 'testUser', '\$2y\$10\$5rOG.sLJ28/4X4gu5J7wBedKLqy77NG5OVt6n8iRH1Q2tZwDqzjim', NOW(), NULL, NULL)";
-      $conn = (new Base())->getConnection();
+      $conn = (new DAO())->getConnection();
       $conn->query($sqlIns);
       $conn = null;
 

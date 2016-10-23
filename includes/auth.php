@@ -1,4 +1,5 @@
 <?php
+	require_once("../classes/DAO.php");
 	include_once("base.php");
 	include_once("cookies.php");
 
@@ -9,7 +10,7 @@
 		*/
 		public function validateLogin($user, $pswd) {
 			$sqlValidate = "SELECT password FROM users WHERE name ='$user'";
-			$conn = (new Base())->getConnection();
+			$conn = (new DAO())->getConnection();
 			try{
 				$result = $conn->query($sqlValidate);
 				$conn = null;
