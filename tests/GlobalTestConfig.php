@@ -1,13 +1,15 @@
 <?php
   require_once("../classes/DAO.php");
-  
+
   class GlobalTestConfig extends PHPUnit_Framework_TestCase {
 
     protected function setUp() {
       $this->base = new DAO();
+      $sqlDelFeeds = "DELETE FROM feeds";
       $sqlDelTok = "DELETE FROM authentication";
       $sqlDelUsr = "DELETE FROM users";
       $conn = $this->base->getConnection();
+      $conn->query($sqlDelFeeds);
       $conn->query($sqlDelTok);
       $conn->query($sqlDelUsr);
       $conn = null;

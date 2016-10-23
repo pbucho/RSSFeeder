@@ -2,6 +2,7 @@
   require_once("../includes/conf.php");
   require_once("../includes/conf_test.php");
   require_once("User.php");
+  require_once("Feed.php");
 
   class DAO {
     public function getConnection(){
@@ -21,7 +22,7 @@
 
     public function getUserById($userId) {
       if(!is_int($userId)){
-        throw new Exception("User ID must be an integer");
+        throw new InvalidArgumentException("User ID must be an integer");
       }
       $sqlUser = "SELECT id, name, password, registered, last_login, last_ip FROM users WHERE id = $userId";
       $conn = $this->getConnection();
@@ -42,6 +43,30 @@
       $user->setLastIp($storedUser['last_ip']);
 
       return $user;
+    }
+
+    public function getFeedById($id) {
+      if(!is_int($id)){
+        throw new InvalidArgumentException("Feed ID must be an integer");
+      }
+      $sqlFeed = "SELECT id, title, link, description, href FROM feeds WHERE id = $id";
+      $conn = $this->getConnection();
+      $storedFeed = $conn->query($sqlFeed);
+      $conn = null;
+
+      $storedFeed = $storedFeed->fetch();
+      if($storedFeed === false){
+        return null;
+      }
+
+      $feed = new Feed();
+      $feed->setId($storedFeed['id']);
+      $feed->setTitle($storedFeed['title']);
+      $feed->setLink($storedFeed['link']);
+      $feed->setDescription($storedFeed['description']);
+      $feed->setHref($storedFeed['href']);
+
+      return $feed;
     }
   }
 ?>
