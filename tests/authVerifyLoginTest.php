@@ -1,33 +1,9 @@
 <?php
-  require("../includes/base.php");
-  require("../includes/auth.php");
+  require_once("GlobalTestConfig.php");
+  require_once("../includes/base.php");
+  require_once("../includes/auth.php");
 
-  class AuthVerifyLoginTest extends PHPUnit_Framework_TestCase {
-    protected $base;
-
-    protected function setUp() {
-      $this->base = new Base();
-      $sqlDelTok = "DELETE FROM authentication";
-      $sqlDelUsr = "DELETE FROM users";
-      $conn = $this->base->getConnection();
-      $conn->query($sqlDelTok);
-      $conn->query($sqlDelUsr);
-      $conn = null;
-    }
-
-    private function addUser() {
-      $sqlInsUsr = "INSERT INTO users (id, name, password, registered, last_login, last_ip) VALUES (1, 'testUser', '\$2y\$10\$5rOG.sLJ28/4X4gu5J7wBedKLqy77NG5OVt6n8iRH1Q2tZwDqzjim', NOW(), NULL, NULL)";
-      $conn = $this->base->getConnection();
-      $conn->query($sqlInsUsr);
-      $conn = null;
-    }
-
-    private function addToken() {
-      $sqlInsTok = "INSERT INTO authentication (token, owner, created, expiry) VALUES ('abcd', 1, NOW(), NULL)";
-      $conn = $this->base->getConnection();
-      $conn->query($sqlInsTok);
-      $conn = null;
-    }
+  class AuthVerifyLoginTest extends GlobalTestConfig {
 
     public function testVerifyLogin() {
       $this->addUser();

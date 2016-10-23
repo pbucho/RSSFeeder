@@ -1,19 +1,14 @@
 <?php
-  require("../includes/base.php");
-  require("../includes/auth.php");
+  require_once("GlobalTestConfig.php");
+  require_once("../includes/base.php");
+  require_once("../includes/auth.php");
 
-  class AuthValidateLoginTest extends PHPUnit_Framework_TestCase {
+  class AuthValidateLoginTest extends GlobalTestConfig {
+
     public static function setupBeforeClass() {
       $sqlTruncTokens = "TRUNCATE TABLE authentication";
       $conn = (new Base())->getConnection();
       $conn->query($sqlTruncTokens);
-      $conn = null;
-    }
-
-    protected function setUp() {
-      $sqlDel = "DELETE FROM users";
-      $conn = (new Base())->getConnection();
-      $conn->query($sqlDel);
       $conn = null;
     }
 
